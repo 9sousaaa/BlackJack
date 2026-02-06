@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'jacoco'
+    id 'info.solidsoft.pitest' version '1.15.0'
+}
+
+group = 'com.NunoSousaaa.ola'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation group: 'com.googlecode.lanterna', name: 'lanterna', version: '3.1.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+}
+
+application {
+    mainClass = 'Random.Application'
+}
+
+run {
+    standardInput = System.in
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.required = false
+        csv.required = false
+        html.required = true
+    }
+}
+pitest {
+    targetClasses = ['Controller.*', 'Model.*', 'Random.*', 'Util.*', 'View.*']
+    junit5PluginVersion = '1.2.1'
+    pitestVersion = '1.15.0'
+    outputFormats = ['HTML']
+    timestampedReports = false
+}
